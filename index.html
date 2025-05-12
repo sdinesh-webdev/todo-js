@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo App</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Todo Application Container -->
+    <div class="todo-container">
+      <!-- Application Title -->
+      <h1>Todo List Application</h1>
+
+      <!-- Todo Input Section -->
+      <div class="input-section">
+        <input
+          type="text"
+          id="todo-input"
+          placeholder="Enter your task here..." />
+        <button onclick="addTodoItem()">Add Task</button>
+      </div>
+
+      <!-- Todo Items List Container -->
+      <ul id="todo-list"></ul>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
