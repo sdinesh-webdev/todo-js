@@ -1,88 +1,50 @@
-// Now i select the input and list element here.
-/*
- * Get references to our main DOM elements:
- * - todoInput: the text input field where users type new tasks
- * - todoListContainer: the ul element that will hold all todo items
- */
-const todoInput = document.getElementById("todo-input");
-const todoListContainer = document.getElementById("todo-list");
+// Get references to HTML elements we'll be working with
+const taskInput = document.getElementById("todo-input"); // The text input box
+const taskList = document.getElementById("todo-list"); // The container for our tasks
 
-/*
- * When the page loads:
- * 1. Try to get saved todos from localStorage
- * 2. If nothing is saved yet, use an empty array
- * 3. For each saved todo, create and display it on the page
- */
-window.onload = () => {
-  const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
-  savedTodos.forEach((todoText) => createTodoItem(todoText));
-};
+// Function that runs when we click "Add Task" button
+function addTask() {
+  // Get the text from input box and remove extra spaces
+  const task = taskInput.value.trim();
 
-/*
- * Function that runs when "Add Task" button is clicked:
- * 1. Get the text from input and remove extra spaces
- * 2. If text is empty, do nothing
- * 3. Otherwise, create new todo item and save all todos
- * 4. Clear the input field for next entry
- */
-function addTodoItem() {
-  //here i use trim()method to remove white space from begnning & end of string
-  const todoText = todoInput.value.trim();
+  // If input is empty, don't add anything
+  if (!task) return;
 
-  // here i applying condition
-  if (!todoText) return;
+  // Create a new list item to hold our task
+  const newTask = document.createElement("li");
+  // Add the task text and buttons inside the list item
+  newTask.innerHTML = `
+        <span>${task}</span>
+        <button onclick="finishTask(this)">Done ✓</button>
+        <button onclick="deleteTask(this)">Delete 🗑️</button>
+    `;
 
-  createTodoItem(todoText);
-  saveTodoItems();
-  todoInput.value = "";
+  // Add the new task to our list
+  taskList.appendChild(newTask);
+
+  // Clear the input box for the next task
+  taskInput.value = "";
 }
 
-/*
- * Function that creates a new todo item:
- * 1. Create a new list item element
- * 2. Set its text content to the todo text
- * 3. Add click handler to toggle completion status
- * 4. Create and add delete button (❌)
- * 5. Add the new item to the list container
- */
-function createTodoItem(todoText) {
-  // creating new element to list input values
-  const todoItem = document.createElement("listItem");
-  todoItem.textContent = todoText;
-
-  // Add click handler to toggle completion
-  todoItem.onclick = () => {
-    todoItem.classList.toggle("completed");
-    saveTodoItems();
-  };
-
-  //deleting todo
-  const deleteButton = document.createElement("span");
-  deleteButton.textContent = "❌";
-  deleteButton.className = "delete-button";
-  deleteButton.style.cursor = "pointer";
-
-  // Add click handler for deletion
-  deleteButton.onclick = (event) => {
-    event.stopPropagation();
-    todoItem.remove();
-    saveTodoItems();
-  };
-
-  todoItem.appendChild(deleteButton);
-  todoListContainer.appendChild(todoItem);
+// Function to mark a task as finished
+function finishTask(button) {
+  // Get the parent list item of the clicked button
+  const task = button.parentElement;
+  // Toggle the 'finished' class to strike through the text
+  task.classList.toggle("finished");
 }
 
-/*
- * Function to save todos to localStorage:
- * 1. Get all todo items from the list
- * 2. Convert them to an array of text content
- * 3. Remove the ❌ symbol and extra spaces
- * 4. Save the array to localStorage as JSON
- */
-function saveTodoItems() {
-  const todoItems = Array.from(todoListContainer.children).map((todoItem) => {
-    return todoItem.textContent.replace("❌", "").trim();
-  });
-  localStorage.setItem("todos", JSON.stringify(todoItems));
+// Function to remove a task from the list
+function deleteTask(button) {
+  // Get the parent list item and remove it
+  const task = button.parentElement;
+  task.remove();
 }
+
+// Listen for when Enter key is pressed in the input box
+taskInput.addEventListener("keypress", function (e) {
+  // If Enter key was pressed, add the task
+  if (e.key === "Enter") {
+    addTask();
+  }
+});
